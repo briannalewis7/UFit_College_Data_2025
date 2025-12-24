@@ -249,7 +249,8 @@ def main():
     
     # Write to CSV
     if all_results:
-        filename = "college_data.csv"
+        name_input = input("Please enter name for output file: \n")
+        filename = name_input.strip() + ".csv"
         fieldnames = all_results[0].keys()  # Get column names from first result
         
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
