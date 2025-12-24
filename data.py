@@ -13,8 +13,8 @@ class Extractor():
     def get_full_data(self):
         data = {"University": self.name}
         data["Location"] = self.get_location()
+        data["Number of Undergraduates"] = self.get_undergrad_count()
 
-        
         # Admission data
         data["Test Policy"] = self.get_test_policy()
         data["SAT Range"] = self.get_sat_range()
@@ -28,10 +28,6 @@ class Extractor():
         data["Cost (Total)"] = self.get_total_cost()
         data["Merit Aid"] = self.get_merit_aid_no_need()
 
-        
-        # Details data
-        data["Undergraduates"] = self.get_undergrad_count()
-        
         return data
 
     # === ADMISSION PAGE EXTRACTORS ===
@@ -239,7 +235,7 @@ class Extractor():
 def main():
     user_input = input("Enter full school name. Please separate each school with a comma. \n")
     schools = user_input.split(",")
-# Collect all data
+    # Collect all data
     all_results = []
     for school in schools:
         print(f"\nFetching data for: {school}...")
