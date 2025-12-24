@@ -232,6 +232,23 @@ class Extractor():
             
         return "N/A"
 
+def export_file(all_results):
+    name_input = input("Please enter name for output file: \n")
+    if len(name_input) <= 0: 
+        raise ValueError
+    filename = name_input.strip() + ".csv"
+    fieldnames = all_results[0].keys()  # Get column names from first result
+    
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(all_results)
+    
+    print(f"\n✓ Data saved to {filename}")
+    success = True
+    return filename, success
+
+
 def main():
     user_input = input("Enter full school name. Please separate each school with a comma. \n")
     schools = user_input.split(",")
@@ -247,18 +264,17 @@ def main():
         for k, v in results.items():
             print(f"  {k}: {v}")
     
-    # Write to CSV
+    # Write to CSV  
     if all_results:
-        name_input = input("Please enter name for output file: \n")
-        filename = name_input.strip() + ".csv"
-        fieldnames = all_results[0].keys()  # Get column names from first result
-        
-        with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(all_results)
-        
-        print(f"\n✓ Data saved to {filename}")
+        success = False
+        while not success:
+            try: 
+                filename, success = export_file(all_results)
+            except ValueError: 
+                print(f"\n Error saving output. Please enter valid file name.")
+            except OSError as e:
+                print(f"\n Error saving data. {e} Please make sure to only include valid characters in file name.\n")
+
 
 if __name__ == "__main__":
     main()
