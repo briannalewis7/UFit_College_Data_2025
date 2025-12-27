@@ -3,14 +3,134 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
+
+# School name mappings
+SCHOOL_NAME_MAP = {
+    # UC System
+    "ucla": "University of California Los Angeles",
+    "uc los angeles": "University of California Los Angeles",
+    "ucb": "University of California Berkeley",
+    "uc berkeley": "University of California Berkeley",
+    "berkeley": "University of California Berkeley",
+    "ucsb": "University of California Santa Barbara",
+    "uc santa barbara": "University of California Santa Barbara",
+    "ucsd": "University of California San Diego",
+    "uc san diego": "University of California San Diego",
+    "uci": "University of California Irvine",
+    "uc irvine": "University of California Irvine",
+    "ucd": "University of California Davis",
+    "uc davis": "University of California Davis",
+    "ucsc": "University of California Santa Cruz",
+    "uc santa cruz": "University of California Santa Cruz",
+    "ucr": "University of California Riverside",
+    "uc riverside": "University of California Riverside",
+    "ucm": "University of California Merced",
+    "uc merced": "University of California Merced",
+    
+    # Other common abbreviations
+    "mit": "Massachusetts Institute of Technology",
+    "caltech": "California Institute of Technology",
+    "nyu": "New York University",
+    "usc": "University of Southern California",
+    "upenn": "University of Pennsylvania",
+    "penn": "University of Pennsylvania",
+    "washu": "Washington University in St. Louis",
+    "wustl": "Washington University in St. Louis",
+    "uva": "University of Virginia",
+    "umich": "University of Michigan",
+    "u michigan": "University of Michigan",
+    "michigan": "University of Michigan",
+    "indiana": "Indiana University Bloomington",
+    "iu": "Indiana University Bloomington",
+    "iowa": "University of Iowa",
+    "unc": "University of North Carolina at Chapel Hill",
+    "uchicago": "University of Chicago",
+    "u chicago": "University of Chicago",
+    "gt": "Georgia Institute of Technology",
+    "georgia tech": "Georgia Institute of Technology",
+    "uiuc": "University of Illinois at Urbana-Champaign",
+    "illinois": "University of Illinois at Urbana-Champaign",
+    "u of i": "University of Illinois at Urbana-Champaign",
+    "ut austin": "University of Texas at Austin",
+    "texas": "University of Texas at Austin",
+    "uw": "University of Washington",
+    "u washington": "University of Washington",
+    "cwru": "Case Western Reserve University",
+    "case western": "Case Western Reserve University",
+    "uw madison": "University of Wisconsin Madison",
+    "madison": "University of Wisconsin Madison"
+}
+
+
+def normalize_school_name(name):
+    """Convert user input to the official school name"""
+    name_lower = name.strip().lower()
+    return SCHOOL_NAME_MAP.get(name_lower, name.strip())
+
+
 class Extractor():
     def __init__(self, school_name: str):
-        self.name = school_name
-        self.name_url = self.name.strip().lower().replace(" ", "-").replace(".", "")
+        # Normalize the name first using the mapping
+        self.original_name = school_name.strip()
+        self.name = normalize_school_name(self.original_name)
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-        self.base_url = f"https://waf.collegedata.com/college-search/{self.name_url}"
+        self._error_logged = False
+        
+        # Try to find a valid URL
+        self.name, self.name_url, self.base_url = self._find_valid_url()
+
+    def _find_valid_url(self):
+        """Try different URL patterns to find a valid school page"""
+        # Try the normalized name first
+        name_url = self.name.lower().replace(" ", "-").replace(".", "")
+        base_url = f"https://waf.collegedata.com/college-search/{name_url}"
+        
+        if self._check_url_valid(base_url):
+            return self.name, name_url, base_url
+        
+        # Try adding "university" at the end
+        name_with_univ = f"{self.name} University"
+        name_url = name_with_univ.lower().replace(" ", "-").replace(".", "")
+        base_url = f"https://waf.collegedata.com/college-search/{name_url}"
+        
+        if self._check_url_valid(base_url):
+            return name_with_univ, name_url, base_url
+        
+        # Try adding "University of" at the beginning
+        name_univ_of = f"University of {self.name}"
+        name_url = name_univ_of.lower().replace(" ", "-").replace(".", "")
+        base_url = f"https://waf.collegedata.com/college-search/{name_url}"
+        
+        if self._check_url_valid(base_url):
+            return name_univ_of, name_url, base_url
+        
+        # Try "[Name] College"
+        name_with_college = f"{self.name} College"
+        name_url = name_with_college.lower().replace(" ", "-").replace(".", "")
+        base_url = f"https://waf.collegedata.com/college-search/{name_url}"
+        
+        if self._check_url_valid(base_url):
+            return name_with_college, name_url, base_url
+        
+        # If nothing works, return the original
+        name_url = self.name.lower().replace(" ", "-").replace(".", "")
+        base_url = f"https://waf.collegedata.com/college-search/{name_url}"
+        return self.name, name_url, base_url
+    
+    def _check_url_valid(self, url):
+        """Check if a URL returns a valid response without creating soup"""
+        try:
+            r = requests.get(url, headers=self.headers, timeout=5)
+            return r.status_code == 200
+        except:
+            return False
 
     def get_full_data(self):
+        # Test if base URL exists first
+        soup = self._get_soup(self.base_url)
+        if soup is None:
+            return None  # School not found, skip entirely
+
         data = {"University": self.name}
         data["Location"] = self.get_location()
         data["Number of Undergraduates"] = self.get_undergrad_count()
@@ -203,9 +323,25 @@ class Extractor():
     def _get_soup(self, url):
         try:
             r = requests.get(url, headers=self.headers)
-            return BeautifulSoup(r.text, 'html.parser') if r.status_code == 200 else None
-        except:
+            if r.status_code == 200:
+                return BeautifulSoup(r.text, 'html.parser')
+            else:
+                self._url_error_handling(url, r.status_code)
+                return None
+        except Exception as e:
+            self._url_error_handling(url, error=str(e))
             return None
+
+    def _url_error_handling(self, url, status_code=None, error=None):
+        """Handle URL errors and notify user"""
+        # Only print error message once per school (for the base URL)
+        if url == self.base_url and not self._error_logged:
+            if status_code:
+                print(f"  ⚠ Warning: Unable to find data for '{self.name}' (Status: {status_code})")
+            else:
+                print(f"  ⚠ Warning: Unable to find data for '{self.name}' (Error: {error})")
+            print(f"  → Skipping this school\n")
+            self._error_logged = True  # Mark that we've logged the error
 
     def _get_div_value(self, soup, label_text):
         """
@@ -232,33 +368,57 @@ class Extractor():
             
         return "N/A"
 
+def export_file(all_results):
+    name_input = input("Please enter name for output file: \n")
+    if len(name_input) <= 0: 
+        raise ValueError
+    filename = name_input.strip() + ".csv"
+    fieldnames = all_results[0].keys()  # Get column names from first result
+    
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(all_results)
+    
+    print(f"\n✓ Data saved to {filename}")
+    success = True
+    return filename, success
+
+
 def main():
     user_input = input("Enter full school name. Please separate each school with a comma. \n")
-    schools = user_input.split(",")
+    schools = [school.strip() for school in user_input.split(",")]  # Added .strip() here!
+    
     # Collect all data
     all_results = []
     for school in schools:
-        print(f"\nFetching data for: {school}...")
         ex = Extractor(school)
+        print(f"\nFetching data for: {ex.name}...")
         results = ex.get_full_data()
+        
+        if results is None:
+            # School not found, skip it
+            continue
+            
         all_results.append(results)
         
         # Print to console
         for k, v in results.items():
             print(f"  {k}: {v}")
     
-    # Write to CSV
+    # Write to CSV  
     if all_results:
-        name_input = input("Please enter name for output file: \n")
-        filename = name_input.strip() + ".csv"
-        fieldnames = all_results[0].keys()  # Get column names from first result
-        
-        with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(all_results)
-        
-        print(f"\n✓ Data saved to {filename}")
+        success = False
+        while not success:
+            try: 
+                filename, success = export_file(all_results)
+            except ValueError: 
+                print(f"\n Error saving output. Please enter valid file name.")
+            except OSError as e:
+                print(f"\n Error saving data. {e} Please make sure to only include valid characters in file name.\n")
+    else:
+        print("\nNo data collected - no CSV file created.")
+
 
 if __name__ == "__main__":
     main()
