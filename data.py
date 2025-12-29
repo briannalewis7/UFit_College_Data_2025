@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import csv
-
 
 # School name mappings
 SCHOOL_NAME_MAP = {
@@ -58,6 +56,7 @@ SCHOOL_NAME_MAP = {
     "cwru": "Case Western Reserve University",
     "case western": "Case Western Reserve University",
     "uw madison": "University of Wisconsin Madison",
+    "wisconsin": "University of Wisconsin Madison",
     "madison": "University of Wisconsin Madison"
 }
 
@@ -72,7 +71,7 @@ class Extractor():
     def __init__(self, school_name: str):
         # Normalize the name first using the mapping
         self.original_name = school_name.strip()
-        self.name = normalize_school_name(self.original_name)
+        self.name = normalize_school_name(self.original_name).title()
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         self._error_logged = False
         
@@ -367,58 +366,3 @@ class Extractor():
                 return sibling.get_text(strip=True)
             
         return "N/A"
-
-def export_file(all_results):
-    name_input = input("Please enter name for output file: \n")
-    if len(name_input) <= 0: 
-        raise ValueError
-    filename = name_input.strip() + ".csv"
-    fieldnames = all_results[0].keys()  # Get column names from first result
-    
-    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(all_results)
-    
-    print(f"\n✓ Data saved to {filename}")
-    success = True
-    return filename, success
-
-
-def main():
-    user_input = input("Enter full school name. Please separate each school with a comma. \n")
-    schools = [school.strip() for school in user_input.split(",")]  # Added .strip() here!
-    
-    # Collect all data
-    all_results = []
-    for school in schools:
-        ex = Extractor(school)
-        print(f"\nFetching data for: {ex.name}...")
-        results = ex.get_full_data()
-        
-        if results is None:
-            # School not found, skip it
-            continue
-            
-        all_results.append(results)
-        
-        # Print to console
-        for k, v in results.items():
-            print(f"  {k}: {v}")
-    
-    # Write to CSV  
-    if all_results:
-        success = False
-        while not success:
-            try: 
-                filename, success = export_file(all_results)
-            except ValueError: 
-                print(f"\n Error saving output. Please enter valid file name.")
-            except OSError as e:
-                print(f"\n Error saving data. {e} Please make sure to only include valid characters in file name.\n")
-    else:
-        print("\nNo data collected - no CSV file created.")
-
-
-if __name__ == "__main__":
-    main()

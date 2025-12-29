@@ -6,7 +6,7 @@ Instructions for Jamie: <br>
  2. switch to the proper directory by typing the following into the command prompt: cd UFit_College_Data_2025 <br>
  3. make sure you have the most updated version of the code by entering the following in the command prompt: git pull <br>
     ** note: you must have completed step 2 for this to work <br>
- 4. run the program by entering the following command: python data.py <br>
+ 4. run the program by entering the following command: python main.py <br>
  5. you will be prompted to type in a list of schools separated by a comma. Please remember
     that this list must match the url that collegedata.com uses <br>
  6. you will be prompted to enter a name for the output csv file. enter a name with no special characters. do not include the ".csv" <br>
