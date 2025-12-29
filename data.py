@@ -24,8 +24,8 @@ SCHOOL_NAME_MAP = {
     "uc riverside": "University of California Riverside",
     "ucm": "University of California Merced",
     "uc merced": "University of California Merced",
-    
-    # Other common abbreviations
+    "mizzou": "University of Missouri Columbia",
+    "unversity of missouri": "University of Missouri Columbia",
     "mit": "Massachusetts Institute of Technology",
     "caltech": "California Institute of Technology",
     "nyu": "New York University",
@@ -136,16 +136,16 @@ class Extractor():
 
         # Admission data
         data["Test Policy"] = self.get_test_policy()
+        data["Avg GPA"] = self.get_avg_gpa()
         data["SAT Range"] = self.get_sat_range()
         data["ACT Range"] = self.get_act_range()
-        data["Avg GPA"] = self.get_avg_gpa()
         data["Acceptance Rate"] = self.get_acceptance_rate()
-        data["Early Decision"] = self.get_early_decision()
-        data["Early Action"] = self.get_early_action()
         
         # Money data
         data["Cost (Total)"] = self.get_total_cost()
         data["Merit Aid"] = self.get_merit_aid_no_need()
+        data["Likely/Target/Reach"] = " " #placeholder
+        data["ED/EA/Rolling"] = self.get_early_options()
 
         return data
 
@@ -231,7 +231,7 @@ class Extractor():
         if not soup:
             return "N/A"
         rate = soup.find(string=re.compile(r'applicants were admitted', re.I))
-        return rate.strip() if rate else "N/A"
+        return rate.strip().split("%")[0] + "%" if rate else "N/A"
     
     def get_early_decision(self):
         soup = self._get_soup(f"{self.base_url}/admission")
@@ -240,6 +240,32 @@ class Extractor():
     def get_early_action(self):
         soup = self._get_soup(f"{self.base_url}/admission")
         return self._get_div_value(soup, "Early Action Offered") if soup else "N/A"
+    
+    def get_early_options(self):
+        ea = self.get_early_action().strip()
+        ed = self.get_early_decision().strip()
+        if ea.strip() == "N/A" and ed.strip() == "N/A":
+            return "N/A"
+        elif ea != "No" and ed != "No":
+            return "ED, EA"
+        elif ea != "No":
+            return "EA"
+        elif ed != "No":
+            return "ED"
+        elif self.get_rolling():
+             return "Rolling"
+        else:
+            return "RD only"
+
+    def get_rolling(self):
+        soup = self._get_soup(f"{self.base_url}/admission")
+        if soup: 
+            reg = self._get_div_value(soup, "Regular Admission Deadline")
+            if reg.strip() == "Rolling":
+                return True
+            else: 
+                return False
+        else: return False
 
     # === MONEY MATTERS PAGE EXTRACTORS ===
     
@@ -277,6 +303,8 @@ class Extractor():
         while current:
             text = current.get_text(strip=True)
             if 'no financial need' in text.lower() and 'merit aid' in text.lower():
+                text = re.sub(r"^\S+\s*", "", text)
+                text = text.replace("(", "").replace(")", "").replace("of freshmen had no financial need and ", "").replace("merit aid, average amount ", "")
                 return text
             current = current.find_next_sibling('div')
         
