@@ -1,4 +1,4 @@
-from data import Extractor
+from data import Extractor, Constants
 import csv
 
 def export_file(all_results):
@@ -31,7 +31,7 @@ def to_csv(all_results):
     else:
         print("\nNo data collected - no CSV file created.")
 
-def get_data(user_input):
+def get_data(user_input, test_pref):
     schools = [school.strip() for school in user_input.split(",")]  
     skipped = []
     # Collect all data
@@ -39,7 +39,7 @@ def get_data(user_input):
     for school in schools:
         ex = Extractor(school)
         print(f"\nFetching data for: {ex.name}...")
-        results = ex.get_full_data()
+        results = ex.get_full_data(test_pref)
         
         if results is None:
             # School not found, skip it
@@ -60,14 +60,24 @@ def get_data(user_input):
     return all_results
 
 def main():
+    test_options = input("Please enter test score preference.\n Enter \"1\" for ACT only, \"2\" for SAT only, or \"3\" or any other character for both SAT and ACT \n")
+    if test_options.strip().lower() in ["1", "one", "act", "act only"]:
+        print("✓ ACT only")
+        test_pref = Constants.ACT
+    elif test_options.strip().lower() in ["2", "two", "sat", "sat only"]:
+        print("✓ SAT only")
+        test_pref = Constants.SAT
+    else:
+        print("✓ SAT and ACT")
+        test_pref = Constants.BOTH
     user_input = input("Enter full school name. Please separate each school with a comma. \n")
-    all_results = get_data(user_input)
+    all_results = get_data(user_input, test_pref)
     done = False
     while not done:
         more_schools = input("\n Would you like to add more schools (y/n)? ")
         if more_schools.strip() in ["y", "yes"]:
             user_input2 = input(f"\nPlease enter school names, separated by a comma.\n")
-            all_results.extend(get_data(user_input2))
+            all_results.extend(get_data(user_input2, test_pref))
         else:
             done = True
 

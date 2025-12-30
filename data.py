@@ -2,68 +2,84 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
+class Constants:
+    ACT = 1
+    SAT = 2
+    BOTH = 3
+
 # School name mappings
 SCHOOL_NAME_MAP = {
     # UC System
     "ucla": "University of California Los Angeles",
-    "uc los angeles": "University of California Los Angeles",
+    "uclosangeles": "University of California Los Angeles",
     "ucb": "University of California Berkeley",
-    "uc berkeley": "University of California Berkeley",
+    "ucberkeley": "University of California Berkeley",
     "berkeley": "University of California Berkeley",
     "ucsb": "University of California Santa Barbara",
-    "uc santa barbara": "University of California Santa Barbara",
+    "ucsanta barbara": "University of California Santa Barbara",
     "ucsd": "University of California San Diego",
-    "uc san diego": "University of California San Diego",
+    "ucsandiego": "University of California San Diego",
     "uci": "University of California Irvine",
-    "uc irvine": "University of California Irvine",
+    "ucirvine": "University of California Irvine",
     "ucd": "University of California Davis",
-    "uc davis": "University of California Davis",
+    "ucdavis": "University of California Davis",
     "ucsc": "University of California Santa Cruz",
-    "uc santa cruz": "University of California Santa Cruz",
+    "ucsantacruz": "University of California Santa Cruz",
     "ucr": "University of California Riverside",
-    "uc riverside": "University of California Riverside",
+    "ucriverside": "University of California Riverside",
     "ucm": "University of California Merced",
-    "uc merced": "University of California Merced",
+    "ucmerced": "University of California Merced",
     "mizzou": "University of Missouri Columbia",
-    "unversity of missouri": "University of Missouri Columbia",
+    "unversityofmissouri": "University of Missouri Columbia",
     "mit": "Massachusetts Institute of Technology",
     "caltech": "California Institute of Technology",
     "nyu": "New York University",
     "usc": "University of Southern California",
     "upenn": "University of Pennsylvania",
     "penn": "University of Pennsylvania",
+    "pitt": "University of Pittsburgh",
     "washu": "Washington University in St. Louis",
     "wustl": "Washington University in St. Louis",
     "uva": "University of Virginia",
     "umich": "University of Michigan",
-    "u michigan": "University of Michigan",
+    "umichigan": "University of Michigan",
     "michigan": "University of Michigan",
+    "umass" : "University of Massachusetts Amherst",
+    "universityofmassachusetts" : "University of Massachusetts Amherst",
     "indiana": "Indiana University Bloomington",
     "iu": "Indiana University Bloomington",
     "iowa": "University of Iowa",
     "unc": "University of North Carolina at Chapel Hill",
+    "universityofnorthcarolina": "University of North Carolina at Chapel Hill",
     "uchicago": "University of Chicago",
-    "u chicago": "University of Chicago",
+    "chicago": "University of Chicago",
     "gt": "Georgia Institute of Technology",
-    "georgia tech": "Georgia Institute of Technology",
+    "georgiatech": "Georgia Institute of Technology",
+    "uga": "University of Georgia",
+    "smu": "Southern Methodist University",
     "uiuc": "University of Illinois at Urbana-Champaign",
     "illinois": "University of Illinois at Urbana-Champaign",
-    "u of i": "University of Illinois at Urbana-Champaign",
-    "ut austin": "University of Texas at Austin",
+    "universityofillinois": "University of Illinois at Urbana-Champaign",
+    "uofi": "University of Illinois at Urbana-Champaign",
+    "utaustin": "University of Texas at Austin",
     "texas": "University of Texas at Austin",
+    "tcu": "Texas Christian University",
+    "texaschristian": "Texas Christian University",
     "uw": "University of Washington",
-    "u washington": "University of Washington",
+    "uwashington": "University of Washington",
     "cwru": "Case Western Reserve University",
-    "case western": "Case Western Reserve University",
-    "uw madison": "University of Wisconsin Madison",
+    "casewestern": "Case Western Reserve University",
+    "uwmadison": "University of Wisconsin Madison",
     "wisconsin": "University of Wisconsin Madison",
-    "madison": "University of Wisconsin Madison"
+    "madison": "University of Wisconsin Madison",
+    "universityofwisconsin": "University of Wisconsin Madison"
+
 }
 
 
 def normalize_school_name(name):
     """Convert user input to the official school name"""
-    name_lower = name.strip().lower()
+    name_lower = name.strip().lower().replace(" ", "")
     return SCHOOL_NAME_MAP.get(name_lower, name.strip())
 
 
@@ -124,7 +140,7 @@ class Extractor():
         except:
             return False
 
-    def get_full_data(self):
+    def get_full_data(self, test_pref):
         # Test if base URL exists first
         soup = self._get_soup(self.base_url)
         if soup is None:
@@ -137,8 +153,15 @@ class Extractor():
         # Admission data
         data["Test Policy"] = self.get_test_policy()
         data["Avg GPA"] = self.get_avg_gpa()
-        data["SAT Range"] = self.get_sat_range()
-        data["ACT Range"] = self.get_act_range()
+
+        if test_pref == Constants.ACT:
+            data["ACT Range"] = self.get_act_range()
+        elif test_pref == Constants.SAT:
+            data["SAT Range"] = self.get_sat_range()
+        else:
+            data["SAT Range"] = self.get_sat_range()
+            data["ACT Range"] = self.get_act_range()
+
         data["Acceptance Rate"] = self.get_acceptance_rate()
         
         # Money data
