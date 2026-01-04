@@ -37,6 +37,8 @@ SCHOOL_NAME_MAP = {
     "usc": "University of Southern California",
     "upenn": "University of Pennsylvania",
     "penn": "University of Pennsylvania",
+    "pennstate": "Penn State University Park",
+    "psu": "Penn State University Park",
     "pitt": "University of Pittsburgh",
     "washu": "Washington University in St. Louis",
     "wustl": "Washington University in St. Louis",
@@ -90,7 +92,6 @@ class Extractor():
         self.name = normalize_school_name(self.original_name).title()
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         self._error_logged = False
-        
         # Try to find a valid URL
         self.name, self.name_url, self.base_url = self._find_valid_url()
 
@@ -165,7 +166,7 @@ class Extractor():
         data["Acceptance Rate"] = self.get_acceptance_rate()
         
         # Money data
-        data["Cost (Total)"] = self.get_total_cost()
+        data["Cost of Attendance"] = self.get_total_cost()
         data["Merit Aid"] = self.get_merit_aid_no_need()
         data["Likely/Target/Reach"] = " " #placeholder
         data["ED/EA/Rolling"] = self.get_early_options()
@@ -290,26 +291,23 @@ class Extractor():
                 return False
         else: return False
 
-    # === MONEY MATTERS PAGE EXTRACTORS ===
-    
     def get_total_cost(self):
-        soup = self._get_soup(f"{self.base_url}/money-matters")
+        soup = self._get_soup(f"{self.base_url}")
         if not soup:
             return "N/A"
+        else:
+            if self._get_div_value(soup, "In-state:") != "N/A": #means public school
+                print(self._get_div_value(soup, "In-state:"))
+                if "Illinois" in self.name.split():
+                    return self._get_div_value(soup, "Cost of Attendance").replace("In-state: ", "")
+                else:
+                    return self._get_div_value(soup, "In-state:").replace("Out-of-state: ", "")
+            else:
+                print("test")
+                return self._get_div_value(soup, "Cost of Attendance")
+
         
-        t_fees = self._get_div_value(soup, "Tuition & Fees")
-        r_board = self._get_div_value(soup, "Room & Board")
-        
-        if t_fees == "N/A" or r_board == "N/A":
-            return "N/A"
-        
-        try:
-            tuition_amt = int(t_fees.replace(',', "").replace('$', ""))
-            room_amt = int(r_board.replace(',', "").replace('$', ""))
-            total = tuition_amt + room_amt
-            return f"{t_fees} (T) + {r_board} (R&B) = ${total:,}"
-        except:
-            return f"{t_fees} (T) + {r_board} (R&B)"
+    # === MONEY MATTERS PAGE EXTRACTORS ===
     
     def get_merit_aid_no_need(self):
         soup = self._get_soup(f"{self.base_url}/money-matters")
