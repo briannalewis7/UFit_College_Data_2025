@@ -64,6 +64,8 @@ SCHOOL_NAME_MAP = {
     "universityofillinois": "University of Illinois at Urbana-Champaign",
     "uofi": "University of Illinois at Urbana-Champaign",
     "utaustin": "University of Texas at Austin",
+    "universityoftexas": "University of Texas at Austin",
+    "austin": "University of Texas at Austin",
     "texas": "University of Texas at Austin",
     "tcu": "Texas Christian University",
     "texaschristian": "Texas Christian University",
@@ -74,8 +76,13 @@ SCHOOL_NAME_MAP = {
     "uwmadison": "University of Wisconsin Madison",
     "wisconsin": "University of Wisconsin Madison",
     "madison": "University of Wisconsin Madison",
-    "universityofwisconsin": "University of Wisconsin Madison"
-
+    "universityofwisconsin": "University of Wisconsin Madison",
+    "minnesota": "University of Minnesota Twin Cities",
+    "universityofminnesota": "University of Minnesota Twin Cities",
+    "minn": "University of Minnesota Twin Cities",
+    "virginiatech": "Virginia Polytechnic Institute and State University",
+    "vatech": "Virginia Polytechnic Institute and State University",
+    "loyola": "Loyola University Chicago"
 }
 
 
@@ -170,14 +177,21 @@ class Extractor():
         data["Merit Aid"] = self.get_merit_aid_no_need()
         data["Likely/Target/Reach"] = " " #placeholder
         data["ED/EA/Rolling"] = self.get_early_options()
-
+        data["Application Deadlines"] = self.get_application_deadlines()
         return data
 
     # === ADMISSION PAGE EXTRACTORS ===
     
     def get_test_policy(self):
         soup = self._get_soup(f"{self.base_url}/admission")
-        return self._get_div_value(soup, "SAT or ACT") if soup else "N/A"
+        if soup: 
+            test_policy = self._get_div_value(soup, "SAT or ACT")
+            if test_policy.strip().lower() == "considered if submitted":
+                return "optional"
+            else:
+                return test_policy
+        else:
+            return "N/A"
     
     def get_sat_range(self):
         soup = self._get_soup(f"{self.base_url}")
@@ -297,13 +311,11 @@ class Extractor():
             return "N/A"
         else:
             if self._get_div_value(soup, "In-state:") != "N/A": #means public school
-                print(self._get_div_value(soup, "In-state:"))
                 if "Illinois" in self.name.split():
                     return self._get_div_value(soup, "Cost of Attendance").replace("In-state: ", "")
                 else:
                     return self._get_div_value(soup, "In-state:").replace("Out-of-state: ", "")
             else:
-                print("test")
                 return self._get_div_value(soup, "Cost of Attendance")
 
         
@@ -366,6 +378,24 @@ class Extractor():
         
         return "N/A"
 
+    def get_application_deadlines(self):
+        soup = self._get_soup(f"{self.base_url}/admission")
+        if soup:
+            deadlines = {}
+            if self.get_early_decision() not in ["N/A", "No"]:
+                deadlines["ED"] = self._get_div_value(soup, "Early Decision Deadline")
+            if self.get_early_action() not in ["N/A", "No"]:
+                deadlines["EA"] = self._get_div_value(soup, "Early Action Deadline")
+            deadlines["RD"] = self._get_div_value(soup, "Regular Admission Deadline")
+            string = ""
+            for key in deadlines:
+                string += f"{key}: {deadlines[key]}, "
+            return string[:len(string)-2]
+        else:
+            return "N/A"
+
+
+ 
     # === HELPER METHODS ===
 
     def _get_soup(self, url):
