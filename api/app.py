@@ -6,7 +6,9 @@ import io
 from data import Extractor, Constants
 
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='../public',
+            static_folder='../public')
 CORS(app)
 
 COLUMN_ORDER = [
