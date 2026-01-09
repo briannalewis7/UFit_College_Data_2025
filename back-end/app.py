@@ -6,13 +6,14 @@ from flask_cors import CORS
 import io
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["http://localhost:5000", "http://127.0.0.1:5000"],
-        "methods": ["GET", "POST"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+# CORS(app, resources={
+#     r"/api/*": {
+#         "origins": ["http://localhost:5000", "http://127.0.0.1:5000"],
+#         "methods": ["GET", "POST"],
+#         "allow_headers": ["Content-Type"]
+#     }
+# })
+CORS(app, resources={r"/api/*": {"origins": "https://briannalewis7.github.io/UFit_College_Data_2025/"}})
 
 COLUMN_ORDER = [
     'University',
