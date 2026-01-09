@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Data</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Header/Title here</h1>
+    </header>
+    <div class="main">
+        <form id="form">
+            <div class="input">
+                <h3>Enter list of schools, separated with commas:</h3>
+                <input type="text" class="text_input" id="text_input" contenteditable="true"
+                    placeholder="Enter school names" required>
+            </div>
+            <div class="test_pref">
+                <h3>Choose Test Preference: </h3>
+                <input type="radio" id="1" name="test" required>
+                <label for="act">ACT only</label>
+                <input type="radio" id="2" name="test" >
+                <label for="sat">SAT only</label>
+                <input type="radio" id="3" name="test">
+                <label for="sat">ACT and SAT</label>
+            </div>
+            <input type="submit" id="btn">
+        </form>
+    </div>
+    <button onclick="exportCSV()" id="export-btn" style="display:none">Export to CSV</button>
+    
+    <div id="loading" style="display:none">Loading...</div>
+    <div id="results"></div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

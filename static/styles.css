@@ -1,0 +1,72 @@
+:root {
+    --white-smoke: #eff7f6;
+    --frosted-blue: #7bdff2;
+    --icy-aqua: #b2f7ef;
+    --petal-frost: #f7d6e0;
+    --blush-pop: #f2b5d4;
+    --darker-smoke: #eff7f6b0;
+}
+
+body {
+    background-image: linear-gradient(to bottom right, var(--petal-frost), var(--icy-aqua));
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+    
+    z-index: 999;
+}   
+.text_input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+
+    padding: 12px 16px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.7);
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(6px);
+    transition: all 0.25s ease;
+}
+
+.text_input:focus {
+    background: rgba(243, 242, 242, 0.7);
+
+}
+#btn {
+    flex-shrink: 0;
+    padding: 12px 20px;
+    border-radius: 18px;
+    border: none;
+    background: rgb(174, 247, 223);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+#btn:hover {
+    box-shadow: 0px 0px 5px #333;
+
+}
+
+h1 {
+    text-align: center;
+}
+
+.test_pref {
+    padding: 12px;
+}
