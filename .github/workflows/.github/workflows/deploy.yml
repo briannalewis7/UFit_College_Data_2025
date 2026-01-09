@@ -1,0 +1,21 @@
+name: Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main] # Runs whenever you push to main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: front-end # <--- The folder where your frontend lives
+          branch: gh-pages # <--- The branch the site is served from
