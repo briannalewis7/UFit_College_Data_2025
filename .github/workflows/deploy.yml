@@ -2,7 +2,7 @@ name: Deploy Frontend to GitHub Pages
 
 on:
   push:
-    branches: [main] # Runs whenever you push to main
+    branches: [main] 
 
 permissions:
   contents: write
@@ -17,5 +17,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: front-end # <--- The folder where your frontend lives
-          branch: gh-pages # <--- The branch the site is served from
+          folder: front-end # Make sure your HTML/CSS is in a folder named 'frontend'
+          branch: gh-pages
