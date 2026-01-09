@@ -25,14 +25,15 @@ async function fetchData(schools, testPref) {
     results.innerHTML = '';
     
     try {
-        const response = await fetch('https://u-fit-college-data-2025.vercel.app/api/schools', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                schools: schools,
-                test_pref: testPref  // Send as string '1', '2', or '3'
-            })
-        });
+        const response = await fetch('/api/schools', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    schools: schools,
+    test_pref: testPref
+  })
+})
+        ;
         
         const data = await response.json();
         currentData = data.data;
@@ -84,11 +85,14 @@ function displayTable(data) {
 async function exportCSV() {
     if (!currentData) return;
     
-    const response = await fetch('https://u-fit-college-data-2025.vercel.app/api/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: currentData })
-    });
+    const response = await fetch('/api/schools', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    schools: schools,
+    test_pref: testPref
+  })
+})
     
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
