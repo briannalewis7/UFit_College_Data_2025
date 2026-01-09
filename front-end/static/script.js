@@ -25,7 +25,7 @@ async function fetchData(schools, testPref) {
     results.innerHTML = '';
     
     try {
-        const response = await fetch('/api/schools', {
+        const response = await fetch('https://u-fit-college-data-2025-eukx0egez-briannalewis7s-projects.vercel.app/api/schools', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -84,7 +84,7 @@ function displayTable(data) {
 async function exportCSV() {
     if (!currentData) return;
     
-    const response = await fetch('/api/export', {
+    const response = await fetch('https://u-fit-college-data-2025-eukx0egez-briannalewis7s-projects.vercel.app/api/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: currentData })

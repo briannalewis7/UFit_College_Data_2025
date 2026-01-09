@@ -42,7 +42,6 @@ def reorder_columns(data):
 
 @app.route('/api/schools', methods=['POST'])
 def get_schools():
-    # 🔥 LAZY IMPORT — fixes Vercel crash
     from data import Extractor, Constants
 
     data = request.json
