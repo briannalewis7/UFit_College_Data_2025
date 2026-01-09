@@ -13,7 +13,7 @@ app = Flask(__name__)
 #         "allow_headers": ["Content-Type"]
 #     }
 # })
-CORS(app, resources={r"/api/*": {"origins": "https://briannalewis7.github.io/UFit_College_Data_2025/"}})
+CORS(app, resources={r"/api/*": {"origins": "https://briannalewis7.github.io"}})
 
 COLUMN_ORDER = [
     'University',
@@ -45,13 +45,6 @@ def reorder_columns(data):
             ordered[key] = data[key]
     
     return ordered
-
-
-# ============ WEB ROUTES ============
-
-@app.route('/')
-def home():
-    return render_template('index.html')
 
 # ============ API ROUTES ============
 
@@ -131,8 +124,3 @@ def export_csv():
         download_name='college_data.csv'
     )
 
-
-# ============ RUN APP ============
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
