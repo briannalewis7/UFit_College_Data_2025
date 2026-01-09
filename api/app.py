@@ -107,3 +107,7 @@ def export_csv():
         as_attachment=True,
         download_name='college_data.csv'
     )
+
+if __name__ != '__main__':
+    # Vercel serverless function handler
+    handler = app
