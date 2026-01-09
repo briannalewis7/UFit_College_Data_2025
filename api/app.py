@@ -3,9 +3,10 @@ import csv
 from flask import Flask, Response, jsonify, request, send_file
 from flask_cors import CORS
 import io
+from data import Extractor, Constants
+
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://briannalewis7.github.io"}})
 
 COLUMN_ORDER = [
     'University',
@@ -42,7 +43,6 @@ def reorder_columns(data):
 
 @app.route('/api/schools', methods=['POST'])
 def get_schools():
-    from data import Extractor, Constants
 
     data = request.json
     schools = data.get('schools', [])
