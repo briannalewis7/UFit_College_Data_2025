@@ -7,6 +7,7 @@ from data import Extractor, Constants
 
 
 app = Flask(__name__)
+CORS(app)
 
 COLUMN_ORDER = [
     'University',

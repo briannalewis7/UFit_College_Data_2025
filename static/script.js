@@ -85,14 +85,12 @@ function displayTable(data) {
 async function exportCSV() {
     if (!currentData) return;
     
-    const response = await fetch('/api/schools', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    schools: schools,
-    test_pref: testPref
-  })
-})
+    // Fixed: was calling wrong endpoint
+    const response = await fetch('/api/export', {  // Changed from /api/schools
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: currentData })  // Fixed: send currentData
+    });
     
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
@@ -101,4 +99,3 @@ async function exportCSV() {
     a.download = 'college_data.csv';
     a.click();
 }
-
