@@ -1,14 +1,14 @@
 import json
 import csv
-from flask import Flask, Response, jsonify, request, send_file
+from flask import Flask, Response, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 import io
+import os
 from data import Extractor, Constants
 
-
 app = Flask(__name__, 
-            template_folder='../public',
-            static_folder='../public')
+            static_folder='../public',
+            static_url_path='')
 CORS(app)
 
 COLUMN_ORDER = [
@@ -27,7 +27,6 @@ COLUMN_ORDER = [
     'Application Deadlines'
 ]
 
-
 def reorder_columns(data):
     """Reorder dictionary keys to maintain consistent column order"""
     ordered = {}
@@ -41,11 +40,19 @@ def reorder_columns(data):
 
     return ordered
 
+# Serve the frontend
+@app.route('/')
+def serve_index():
+    return send_from_directory('../public', 'index.html')
 
-# ============ API ROUTES ============
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('../public', path)
 
-@app.route('/api/schools', methods=['POST'])
+@app.route('/api/schools', methods=['POST', 'OPTIONS'])
 def get_schools():
+    if request.method == 'OPTIONS':
+        return '', 204
 
     data = request.json
     schools = data.get('schools', [])
@@ -85,9 +92,11 @@ def get_schools():
         mimetype='application/json'
     )
 
-
-@app.route('/api/export', methods=['POST'])
+@app.route('/api/export', methods=['POST', 'OPTIONS'])
 def export_csv():
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     data = request.json
     schools_data = data.get('data', [])
 
@@ -110,7 +119,3 @@ def export_csv():
         as_attachment=True,
         download_name='college_data.csv'
     )
-
-if __name__ != '__main__':
-    # Vercel serverless function handler
-    handler = app
