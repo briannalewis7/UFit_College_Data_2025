@@ -41,6 +41,9 @@ def reorder_columns(data):
 
     return ordered
 
+@app.route('/api/test')
+def test():
+    return jsonify({"status": "API route works"})
 
 
 @app.route('/api/schools', methods=['POST', 'OPTIONS'])
