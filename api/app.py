@@ -1,12 +1,13 @@
 import json
 import csv
-from flask import Flask, Response, jsonify, request, send_file, send_from_directory
+from flask import Flask, Response, jsonify, request, send_file, render_template
 from flask_cors import CORS
 import io
 import os
 from data import Extractor, Constants
 
 app = Flask(__name__, 
+            template_folder='../public',
             static_folder='../public',
             static_url_path='')
 CORS(app)
@@ -40,14 +41,9 @@ def reorder_columns(data):
 
     return ordered
 
-# Serve the frontend
 @app.route('/')
 def serve_index():
-    return send_from_directory('../public', 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('../public', path)
+    return render_template('index.html')
 
 @app.route('/api/schools', methods=['POST', 'OPTIONS'])
 def get_schools():
