@@ -4,7 +4,7 @@ from flask import Flask, Response, jsonify, request, send_file, render_template
 from flask_cors import CORS
 import io
 import os
-from data import Extractor, Constants
+from .data import Extractor, Constants
 
 app = Flask(__name__, 
             template_folder='../public',
