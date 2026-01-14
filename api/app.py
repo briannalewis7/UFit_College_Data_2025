@@ -41,9 +41,7 @@ def reorder_columns(data):
 
     return ordered
 
-@app.route('/')
-def serve_index():
-    return render_template('index.html')
+
 
 @app.route('/api/schools', methods=['POST', 'OPTIONS'])
 def get_schools():
@@ -115,3 +113,7 @@ def export_csv():
         as_attachment=True,
         download_name='college_data.csv'
     )
+
+@app.route('/')
+def serve_index():
+    return render_template('index.html')
