@@ -4,15 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Data</title>
+    <title>College Data</title>  
+    <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
 
     <header>
-        <h1>Header/Title here</h1>
+        <h1 class="title">UFit College Data Search</h1>
     </header>
+    <div class="buttons">
+    <div class="home-btn">Return to College Search</div>
+    <div class="export-btn">Export to CSV</div>
+
+    </div>
     <div class="main">
         <form id="form">
             <div class="input">
@@ -23,19 +29,19 @@
             <div class="test_pref">
                 <h3>Choose Test Preference: </h3>
                 <input type="radio" id="1" name="test" required>
-                <label for="act">ACT only</label>
+                <label for="1">ACT only</label>
                 <input type="radio" id="2" name="test" >
-                <label for="sat">SAT only</label>
+                <label for="2">SAT only</label>
                 <input type="radio" id="3" name="test">
-                <label for="sat">ACT and SAT</label>
+                <label for="3">ACT and SAT</label>
             </div>
             <input type="submit" id="btn">
         </form>
     </div>
-    <button onclick="exportCSV()" id="export-btn" style="display:none">Export to CSV</button>
-    
-    <div id="loading" style="display:none">Loading...</div>
+    <div class="loader" id="loader"></div>
+    <div id="loading">Fetching Results...</div>
     <div id="results"></div>
+    <div class="add-btn">Add more schools</div>
     <script src="/static/script.js"></script>
 </body>
 

@@ -17,6 +17,65 @@ body {
     flex-direction: column;
 }
 
+.buttons {
+    width: fit-content;
+}
+
+.title, h3 {
+    cursor: default;
+}
+ 
+.home-btn {
+    display: none;
+    padding: 12px 20px;
+    border-radius: 18px;
+    border: none;
+    background: rgb(174, 247, 223);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-bottom: 10px;
+}
+    
+.home-btn:hover {
+    box-shadow: 0px 0px 5px #333;
+}
+.add-btn {
+    display: none;
+    padding: 12px 20px;
+    border-radius: 18px;
+    border: none;
+    background: rgb(174, 247, 223);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-top: 10px;
+    width: fit-content;
+}
+    
+.add-btn:hover {
+    box-shadow: 0px 0px 5px #333;
+}
+.export-btn {
+    display: none;
+    padding: 12px 20px;
+    border-radius: 18px;
+    border: none;
+    background: rgb(174, 247, 223);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-bottom: 10px;
+}
+    
+
+
+.export-btn:hover {
+    box-shadow: 0px 0px 5px #333;
+}
+
+
+
 .input {
     display: flex;
     flex-direction: column;
@@ -69,4 +128,43 @@ h1 {
 
 .test_pref {
     padding: 12px;
+}
+.loader {
+  display: none;
+  width: 80px;  /* Smaller size */
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #6be9ff,
+    #4ecdc4,
+    #45b7d1,
+    transparent
+  );
+  position: fixed;  /* Fixed positioning */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* Center it */
+  animation: spin 1.5s linear infinite;
+  mask: radial-gradient(farthest-side, transparent calc(100% - 12px), white calc(100% - 12px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 12px), white calc(100% - 12px));
+  z-index: 1000;  /* Appear on top */
+}
+
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+#loading {
+  display: none;
+  position: fixed;
+  top: calc(50% + 50px);  /* Below the spinner */
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+  font-size: 20px;
+  z-index: 1000;
+
 }
