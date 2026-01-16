@@ -9,7 +9,7 @@ const loading = document.getElementById('loading')
 const results = document.getElementById('results')
 const title = document.querySelector('.title')
 const addBtn = document.querySelector('.add-btn')
-
+let append = false
 homeBtn.addEventListener("click", returnHome)
 exportBtn.addEventListener("click", exportCSV)
 addBtn.addEventListener('click', addMore)
@@ -43,8 +43,13 @@ async function fetchData(schools, testPref) {
             
 
         const data = await response.json()
-        currentData += data.data
-
+       // Append or replace currentData
+        if (append) {
+            currentData = currentData.concat(data.data)
+            append = false
+        } else {
+            currentData = data.data
+        }
         if (data.data.length === 0) {
             results.innerHTML = '<p>No data found</p>'
             return
@@ -58,7 +63,7 @@ async function fetchData(schools, testPref) {
         addBtn.style.display = 'block'
     
         // Display results as table
-        displayTable(data.data)
+        displayTable(currentData)
 
         // Show skipped schools if any
         if (data.skipped.length > 0) {
@@ -130,5 +135,7 @@ function addMore() {
     input.value = ''
     title.style.cursor = 'default'
     addBtn.style.display = 'none'
+    document.querySelector('.test_pref').style.display = 'none'
+    append = true
 }
 
