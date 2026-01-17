@@ -124,10 +124,11 @@ function returnHome() {
     currentData = null
     title.style.cursor = 'default'
     addBtn.style.display = 'none'
+    document.querySelector('.test_pref').style.display = 'block'
 }
 
 function addMore() {
-    homeBtn.style.display = 'none'
+   // homeBtn.style.display = 'none'
     exportBtn.style.display = 'none'
     addBtn.style.display = 'none'
     form.style.display = 'block'
