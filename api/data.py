@@ -88,7 +88,7 @@ SCHOOL_NAME_MAP = {
 
 def normalize_school_name(name):
     """Convert user input to the official school name"""
-    name_lower = name.strip().lower().replace(" ", "")
+    name_lower = name.strip().lower().replace(" ", "").replace("-", "")
     return SCHOOL_NAME_MAP.get(name_lower, name.strip())
 
 

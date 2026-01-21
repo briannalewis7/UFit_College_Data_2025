@@ -18,9 +18,9 @@ COLUMN_ORDER = [
     'Location',
     'Number of Undergraduates',
     'Test Policy',
-    'SAT Range',
-    'ACT Range',
     'Avg GPA',
+    'ACT Range',
+    'SAT Range',
     'Acceptance Rate',
     'Cost of Attendance',
     'Merit Aid',
@@ -121,3 +121,6 @@ def export_csv():
 @app.route('/')
 def serve_index():
     return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
