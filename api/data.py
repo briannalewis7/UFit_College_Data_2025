@@ -82,7 +82,13 @@ SCHOOL_NAME_MAP = {
     "minn": "University of Minnesota Twin Cities",
     "virginiatech": "Virginia Polytechnic Institute and State University",
     "vatech": "Virginia Polytechnic Institute and State University",
-    "loyola": "Loyola University Chicago"
+    "loyola": "Loyola University Chicago",
+    "mohio" : "Miami University",
+    "miamiohio" : "Miami University",
+    "miamiofohio" : "Miami University",
+    "miamiu" : "Miami University",
+    "umiami" : "University of Miami",
+    "miamiflorida" : "University of Miami"
 }
 
 

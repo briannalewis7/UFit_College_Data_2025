@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Data</title>  
-    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="icon" type="image/x-icon" href="https://www.ufitcollegeconsulting.com/uploads/1/3/2/6/132663628/published/ufit-alt-blue.png">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
 
     <header>
-        <h1 class="title">UFit College Data Search</h1>
+        <img src="https://www.ufitcollegeconsulting.com/uploads/1/3/2/6/132663628/published/ufit-alt-blue.png" alt="UFit logo">
+        <h1 class="title">College Data Search</h1>
     </header>
     <div class="buttons">
     <div class="home-btn">Return to home page</div>
@@ -24,8 +25,11 @@
             <div class="input">
                 <h3>Enter list of schools, separated with commas:</h3>
                 <input type="text" class="text_input" id="text_input" contenteditable="true"
-                    placeholder="Enter school names" required>
+                    placeholder="Enter school names" autocomplete="off" required>
             </div>
+            <ul class="autocomplete">
+
+            </ul>
             <div class="test_pref">
                 <h3>Choose Test Preference: </h3>
                 <input type="radio" id="1" name="test" required>

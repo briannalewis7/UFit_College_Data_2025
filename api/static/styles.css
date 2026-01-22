@@ -7,6 +7,14 @@
     --darker-smoke: #eff7f6b0;
 }
 
+header {
+    display: flex;
+    justify-content: center;
+}
+
+img {
+    width: 10%;
+}
 body {
     background-image: linear-gradient(to bottom right, var(--petal-frost), var(--icy-aqua));
     min-height: 100vh;
@@ -21,6 +29,10 @@ body {
     width: fit-content;
 }
 
+.title {
+    color: #3C6489;
+    margin-top: 30px;
+}
 .title, h3 {
     cursor: default;
 }
@@ -168,3 +180,35 @@ h1 {
   z-index: 1000;
 
 }
+
+.autocomplete {
+    display: none;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    bottom: 60px;
+    box-shadow: 0 4px 12px #00000026;
+    left: 16px;
+    list-style: none;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 6px 0;
+    right: 16px;
+    z-index: 1000;
+}
+
+.autocomplete-item {
+  padding: 8px 16px;
+  margin: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.autocomplete-item:hover {
+  background: var(--icy-aqua);
+}
+
