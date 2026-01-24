@@ -88,13 +88,14 @@ SCHOOL_NAME_MAP = {
     "miamiofohio" : "Miami University",
     "miamiu" : "Miami University",
     "umiami" : "University of Miami",
-    "miamiflorida" : "University of Miami"
+    "miamiflorida" : "University of Miami",
+    "texasamuniversity" : "Texas A M University"
 }
 
 
 def normalize_school_name(name):
     """Convert user input to the official school name"""
-    name_lower = name.strip().lower().replace(" ", "").replace("-", "")
+    name_lower = name.strip().lower().replace(" ", "").replace("-", "").replace("&", "")
     return SCHOOL_NAME_MAP.get(name_lower, name.strip())
 
 
