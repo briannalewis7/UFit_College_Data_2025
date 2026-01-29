@@ -396,7 +396,9 @@ class Extractor():
             deadlines["RD"] = self._get_div_value(soup, "Regular Admission Deadline")
             string = ""
             for key in deadlines:
-                string += f"{key}: {deadlines[key]}, "
+                deadline = deadlines[key].split(', ')
+                deadline = deadline[0]
+                string += f"{key}: {deadline}, "
             return string[:len(string)-2]
         else:
             return "N/A"
