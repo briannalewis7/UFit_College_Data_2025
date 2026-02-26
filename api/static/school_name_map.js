@@ -28,6 +28,7 @@ const SCHOOL_NAME_MAP = {
     "penn": "University of Pennsylvania",
     "pennstate": "Penn State University Park",
     "psu": "Penn State University Park",
+    "upitt": "University of Pittsburgh",
     "pitt": "University of Pittsburgh",
     "washu": "Washington University in St. Louis",
     "wustl": "Washington University in St. Louis",
@@ -85,9 +86,10 @@ const SCHOOL_NAME_MAP = {
     "uofsc": "University of South Carolina",
     "gwu": "George Washington University",
     "gw": "George Washington University",
-    "gw": "George Washington University",
     "boulder": "University of Colorado Boulder",
+    "colorado": "University of Colorado Boulder",
     "cuboulder": "University of Colorado Boulder",
+    "coloradocollege": "Colorado College",
     "costate": "Colorado State University",
     "iowastate": "Iowa State University",
     "tulane": "Tulane University",
@@ -111,6 +113,7 @@ const SCHOOL_NAME_MAP = {
     "purdue": "Purdue University",
     "rochester": "University of Rochester",
     "floraidastate": "Florida State University",
+    "fsu": "Florida State University",
     "texasa&m": "Texas A&M University",
     "wakeforest": "Wake Forest University",
     "williamandmary": "College of William and Mary",
@@ -123,6 +126,9 @@ const SCHOOL_NAME_MAP = {
     "stanford": "Stanford University",
     "harvard": "Harvard University",
     "princeton": "Princeton University",
-    "uic": "University of Illinois at Chicago"
+    "uic": "University of Illinois at Chicago",
+    "asu" : "Arizona State University",
+    "tennessee": "The University of Tennessee at Knoxville",
+    "oklahomastate": "Oklahoma State University Oklahoma City"
 }
 export default SCHOOL_NAME_MAP
