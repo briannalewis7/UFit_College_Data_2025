@@ -151,19 +151,19 @@ def normalize_school_name(name):
     return SCHOOL_NAME_MAP.get(name_lower, name.strip())
 
 OOS_ACCEPTANCE_RATE =  {
-        "University of Wisconsin Madison": "40.33",
-        "University of Colorado Boulder": "66.68",
-        "University of Virginia": "12.91",
-        "University of North Carolina at Chapel Hill": "10.93",
-        "The University of Tennessee at Knoxville": "35.08",
-        "University of Washington": "36.20",
-        "Georgia Institute of Technology": "10.12",
-        "University of Texas at Austin": "10.13",
+        "University Of Wisconsin Madison": "40.33",
+        "University Of Colorado Boulder": "66.68",
+        "University Of Virginia": "12.91",
+        "University Of North Carolina At Chapel Hill": "10.93",
+        "The University Of Tennessee At Knoxville": "35.08",
+        "University Of Washington": "36.20",
+        "Georgia Institute Of Technology": "10.12",
+        "University Of Texas At Austin": "10.13",
         "Florida State University": "13.36",
         "Purdue University": "43.58",
-        "University of South Carolina": "54.72",
-        "University of Georgia": "31.10",
-        "University of California Berkeley": "10.33"
+        "University Of South Carolina": "54.72",
+        "University Of Georgia": "31.10",
+        "University Of California Berkeley": "10.33"
     }
 
 class Extractor():
@@ -341,13 +341,13 @@ class Extractor():
     def get_acceptance_rate(self):
         OOS = ""
         if self.name in OOS_ACCEPTANCE_RATE:
-            OOS = f"({OOS_ACCEPTANCE_RATE[self.name]}% OOS)"
+            OOS = f" ({OOS_ACCEPTANCE_RATE[self.name]}% OOS)"
         soup = self._get_soup(f"{self.base_url}")
         if not soup:
             return "N/A"
         rate = soup.find(string=re.compile(r'applicants were admitted', re.I))
 
-        return OOS + rate.strip().split("%")[0] + "%" if rate else "N/A"
+        return rate.strip().split("%")[0] + "%" + OOS if rate else "N/A"
     
     def get_early_decision(self):
         soup = self._get_soup(f"{self.base_url}/admission")
