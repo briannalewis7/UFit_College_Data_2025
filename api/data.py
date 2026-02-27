@@ -140,6 +140,7 @@ SCHOOL_NAME_MAP = {
     "asu" : "Arizona State University",
     "tennessee": "The University of Tennessee at Knoxville",
     "oklahomastate": "Oklahoma State University Stillwater",
+    "southcarolina": "University of South Carolina",
     "texasamuniversity" : "Texas A M University"
 }
 
@@ -322,12 +323,34 @@ class Extractor():
         soup = self._get_soup(f"{self.base_url}")
         return self._get_div_value(soup, "Average GPA") if soup else "N/A"
     
+    OOS_ACCEPTANCE_RATE =  {
+        "University of Wisconsin Madison": "40.33",
+        "University of Colorado Boulder": "66.68",
+        "University of Virginia": "12.91",
+        "University of North Carolina at Chapel Hill": "10.93",
+        "The University of Tennessee at Knoxville": "35.08",
+        "University of Washington": "36.20",
+        "Georgia Institute of Technology": "10.12",
+        "University of Texas at Austin": "10.13",
+        "Florida State University": "13.36",
+        "Purdue University": "43.58",
+        "University of South Carolina": "54.72",
+        "University of Georgia": "31.10",
+        "University of California Berkeley": "10.33"
+    }
+
+
+
     def get_acceptance_rate(self):
+        OOS = ""
+        if self.name in self.OOS_ACCEPTANCE_RATE:
+            OOS = f"({self.OOS_ACCEPTANCE_RATE[self.name]}% OOS)"
         soup = self._get_soup(f"{self.base_url}")
         if not soup:
             return "N/A"
         rate = soup.find(string=re.compile(r'applicants were admitted', re.I))
-        return rate.strip().split("%")[0] + "%" if rate else "N/A"
+
+        return OOS + rate.strip().split("%")[0] + "%" if rate else "N/A"
     
     def get_early_decision(self):
         soup = self._get_soup(f"{self.base_url}/admission")

@@ -129,6 +129,7 @@ const SCHOOL_NAME_MAP = {
     "uic": "University of Illinois at Chicago",
     "asu" : "Arizona State University",
     "tennessee": "The University of Tennessee at Knoxville",
-    "oklahomastate": "Oklahoma State University Stillwater"
+    "oklahomastate": "Oklahoma State University Stillwater",
+    "southcarolina": "University of South Carolina"
 }
 export default SCHOOL_NAME_MAP
